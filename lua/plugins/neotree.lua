@@ -3,14 +3,26 @@ return {
   branch = "v3.x",
   dependencies = {
     "nvim-lua/plenary.nvim",
-    "nvim-tree/nvim-web-devicons", 
-    "MunifTanjim/nui.nvim"
+    "nvim-tree/nvim-web-devicons",
+    "MunifTanjim/nui.nvim",
   },
-  lazy = false, 
+  lazy = false,
   opts = {
-    -- fill any relevant options here
+    -- Opts here
   },
   config = function()
-    vim.keymap.set('n', '<C-n>', ':Neotree filesystem reveal left<cr>', { desc = "Open file tree on the left" })
-  end
+    require("neo-tree").setup({
+      event_handlers = {
+        {
+          event = "file_opened",
+          handler = function(file_path)
+            print("Opened file: " .. file_path)
+            require("neo-tree.command").execute({ action = "close" })
+          end,
+        },
+      },
+    })
+
+    vim.keymap.set("n", "<C-n>", ":Neotree filesystem reveal left<cr>", { desc = "Open file tree on the left" })
+  end,
 }
